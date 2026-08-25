@@ -1,0 +1,1 @@
+public delegate void TriggerCollisionDelegate(GETriggerC _trigger, ChipmunkC _collidingCMC, ChipmunkCollisionPair _collisionPair, ChipmunkCollisionList _collisionList);

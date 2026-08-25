@@ -1,0 +1,27 @@
+public enum ConnectionSlotType
+{
+	Any = 0,
+	Input = 1,
+	Output = 2,
+	Activate = 3,
+	ColliderType = 4,
+	Deactivate = 5,
+	Destroy = 6,
+	Modifier = 7,
+	RailMotorEnabled = 8,
+	RailMotorRate = 9,
+	RotaryMotorEnabled = 10,
+	RotaryMotorRate = 11,
+	Boost = 12,
+	Carry = 13,
+	Gravity = 14,
+	Grip = 15,
+	Dive = 16,
+	Fly = 17,
+	Jump = 18,
+	Look = 19,
+	Move = 20,
+	Use = 21,
+	Enter = 22,
+	Exit = 23
+}

@@ -1,0 +1,28 @@
+public enum ModifierType
+{
+	None = 0,
+	Add = 1,
+	Sub = 2,
+	Div = 3,
+	Mul = 4,
+	Pow = 5,
+	Sqr = 6,
+	Abs = 7,
+	Min = 8,
+	Max = 9,
+	Sin = 10,
+	Cos = 11,
+	Tan = 12,
+	Asin = 13,
+	Acos = 14,
+	Atan = 15,
+	Ceil = 16,
+	Round = 17,
+	Floor = 18,
+	IsEqual = 19,
+	IsNotEqual = 20,
+	IsLargerThan = 21,
+	IsSmallerThan = 22,
+	IsLargerOrEqualTo = 23,
+	IsSmallerOrEqualTo = 24
+}

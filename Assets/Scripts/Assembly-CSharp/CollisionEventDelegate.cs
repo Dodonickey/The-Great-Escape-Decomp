@@ -1,0 +1,1 @@
+public delegate void CollisionEventDelegate(ChipmunkCollisionPair _collisionPair, ChipmunkCollisionList _collisionList);

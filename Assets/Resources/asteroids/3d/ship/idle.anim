@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!74 &7400000
+AnimationClip:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: idle
+  m_Compressed: 0
+  m_RotationCurves: []
+  m_CompressedRotationCurves: []
+  m_PositionCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: {x: -1.1652989, y: 1.5255113, z: 0.009151478}
+        inSlope: {x: -1.2677879, y: 0, z: 0}
+        outSlope: {x: -1.2677879, y: 0, z: 0}
+        tangentMode: 0
+      - time: 0.041666668
+        value: {x: -1.2181234, y: 1.5255113, z: 0.009151478}
+        inSlope: {x: -7.130218E-06, y: 7.137148E-15, z: 2.6020852E-16}
+        outSlope: {x: 0.0009333369, y: 1.6653347E-14, z: 1.1151795E-16}
+        tangentMode: 0
+      - time: 0.083333336
+        value: {x: -1.1652989, y: 1.5255113, z: 0.009151478}
+        inSlope: {x: 1.2677879, y: 0, z: 0}
+        outSlope: {x: 1.2677879, y: 0, z: 0}
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    path: Flame1
+  m_ScaleCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: {x: -0.018435027, y: -0.018435027, z: -0.018435027}
+        inSlope: {x: 1.5558082, y: 1.5558082, z: 1.5558082}
+        outSlope: {x: 1.5558082, y: 1.5558082, z: 1.5558082}
+        tangentMode: 0
+      - time: 0.041666668
+        value: {x: 0.04639031, y: 0.04639031, z: 0.04639031}
+        inSlope: {x: 12.221222, y: 12.221222, z: 12.221222}
+        outSlope: {x: 12.221222, y: 12.221222, z: 12.221222}
+        tangentMode: 0
+      - time: 0.083333336
+        value: {x: -0.018435027, y: -0.018435027, z: -0.018435027}
+        inSlope: {x: -1.5558082, y: -1.5558082, z: -1.5558082}
+        outSlope: {x: -1.5558082, y: -1.5558082, z: -1.5558082}
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    path: Flame1
+  m_FloatCurves: []
+  m_SampleRate: 24
+  m_WrapMode: 1
+  m_Bounds:
+    m_Center: {x: -1.2181234, y: 1.5255113, z: 0.009151474}
+    m_Extent: {x: 0.33835685, y: 0, z: 0.20399925}
+  m_EditorCurves: []
+  m_EulerEditorCurves: []
+  m_Events: []
