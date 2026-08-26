@@ -4,217 +4,271 @@ using UnityEngine;
 
 public class GpcWrapper
 {
-	private enum gpc_op
-	{
-		GPC_DIFF = 0,
-		GPC_INT = 1,
-		GPC_XOR = 2,
-		GPC_UNION = 3
-	}
+    private enum gpc_op
+    {
+        GPC_DIFF = 0,
+        GPC_INT = 1,
+        GPC_XOR = 2,
+        GPC_UNION = 3
+    }
 
-	private struct gpc_vertex
-	{
-		public double x;
+    [StructLayout(LayoutKind.Sequential)]
+    private struct gpc_vertex
+    {
+        public double x;
+        public double y;
+    }
 
-		public double y;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    private struct gpc_vertex_list
+    {
+        public int num_vertices;
+        public IntPtr vertex;
+    }
 
-	private struct gpc_vertex_list
-	{
-		public int num_vertices;
+    [StructLayout(LayoutKind.Sequential)]
+    private struct gpc_polygon
+    {
+        public int num_contours;
+        public IntPtr hole;
+        public IntPtr contour;
+    }
 
-		public IntPtr vertex;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    private struct gpc_tristrip
+    {
+        public int num_strips;
+        public IntPtr strip;
+    }
 
-	private struct gpc_polygon
-	{
-		public int num_contours;
+#if UNITY_IOS || UNITY_IPHONE || UNITY_STANDALONE_OSX
+    private const string lookFrom = "__Internal";
+#else
+    private const string lookFrom = "chipmunk";
+#endif
 
-		public IntPtr hole;
+    public static Tristrip PolygonToTristrip(Polygon polygon)
+    {
+        gpc_tristrip tristrip = default(gpc_tristrip);
+        gpc_polygon polygon2 = PolygonTo_gpc_polygon(polygon);
+        gpc_polygon_to_tristrip(ref polygon2, ref tristrip);
+        Tristrip result = gpc_strip_ToTristrip(tristrip);
+        Free_gpc_polygon(polygon2);
+        gpc_free_tristrip(ref tristrip);
+        return result;
+    }
 
-		public IntPtr contour;
-	}
+    public static Tristrip ClipToTristrip(GpcOperation operation, Polygon subject_polygon, Polygon clip_polygon)
+    {
+        gpc_tristrip result_tristrip = default(gpc_tristrip);
+        gpc_polygon subject_polygon2 = PolygonTo_gpc_polygon(subject_polygon);
+        gpc_polygon clip_polygon2 = PolygonTo_gpc_polygon(clip_polygon);
+        gpc_tristrip_clip(operation, ref subject_polygon2, ref clip_polygon2, ref result_tristrip);
+        Tristrip result = gpc_strip_ToTristrip(result_tristrip);
+        Free_gpc_polygon(subject_polygon2);
+        Free_gpc_polygon(clip_polygon2);
+        gpc_free_tristrip(ref result_tristrip);
+        return result;
+    }
 
-	private struct gpc_tristrip
-	{
-		public int num_strips;
+    public static Polygon Clip(GpcOperation operation, Polygon subject_polygon, Polygon clip_polygon)
+    {
+        gpc_polygon result_polygon = default(gpc_polygon);
+        gpc_polygon subject_polygon2 = PolygonTo_gpc_polygon(subject_polygon);
+        gpc_polygon clip_polygon2 = PolygonTo_gpc_polygon(clip_polygon);
+        gpc_polygon_clip(operation, ref subject_polygon2, ref clip_polygon2, ref result_polygon);
+        Polygon result = gpc_polygon_ToPolygon(result_polygon);
+        Free_gpc_polygon(subject_polygon2);
+        Free_gpc_polygon(clip_polygon2);
+        gpc_free_polygon(ref result_polygon);
+        return result;
+    }
 
-		public IntPtr strip;
-	}
+    private static gpc_polygon PolygonTo_gpc_polygon(Polygon polygon)
+    {
+        gpc_polygon result = new gpc_polygon
+        {
+            num_contours = polygon.NofContours
+        };
 
-	private const string lookFrom = "__Internal";
+        int contourCount = polygon.NofContours;
+        if (contourCount == 0)
+        {
+            return result;
+        }
 
-	public static Tristrip PolygonToTristrip(Polygon polygon)
-	{
-		gpc_tristrip tristrip = default(gpc_tristrip);
-		gpc_polygon polygon2 = PolygonTo_gpc_polygon(polygon);
-		gpc_polygon_to_tristrip(ref polygon2, ref tristrip);
-		Tristrip result = gpc_strip_ToTristrip(tristrip);
-		Free_gpc_polygon(polygon2);
-		gpc_free_tristrip(ref tristrip);
-		return result;
-	}
+        int[] array = new int[contourCount];
+        for (int i = 0; i < contourCount; i++)
+        {
+            array[i] = polygon.ContourIsHole[i] ? 1 : 0;
+        }
 
-	public static Tristrip ClipToTristrip(GpcOperation operation, Polygon subject_polygon, Polygon clip_polygon)
-	{
-		gpc_tristrip result_tristrip = default(gpc_tristrip);
-		gpc_polygon subject_polygon2 = PolygonTo_gpc_polygon(subject_polygon);
-		gpc_polygon clip_polygon2 = PolygonTo_gpc_polygon(clip_polygon);
-		gpc_tristrip_clip(operation, ref subject_polygon2, ref clip_polygon2, ref result_tristrip);
-		Tristrip result = gpc_strip_ToTristrip(result_tristrip);
-		Free_gpc_polygon(subject_polygon2);
-		Free_gpc_polygon(clip_polygon2);
-		gpc_free_tristrip(ref result_tristrip);
-		return result;
-	}
+        result.hole = Marshal.AllocCoTaskMem(contourCount * Marshal.SizeOf(typeof(int)));
+        Marshal.Copy(array, 0, result.hole, contourCount);
 
-	public static Polygon Clip(GpcOperation operation, Polygon subject_polygon, Polygon clip_polygon)
-	{
-		gpc_polygon result_polygon = default(gpc_polygon);
-		gpc_polygon subject_polygon2 = PolygonTo_gpc_polygon(subject_polygon);
-		gpc_polygon clip_polygon2 = PolygonTo_gpc_polygon(clip_polygon);
-		gpc_polygon_clip(operation, ref subject_polygon2, ref clip_polygon2, ref result_polygon);
-		Polygon result = gpc_polygon_ToPolygon(result_polygon);
-		Free_gpc_polygon(subject_polygon2);
-		Free_gpc_polygon(clip_polygon2);
-		gpc_free_polygon(ref result_polygon);
-		return result;
-	}
+        int vlSize = Marshal.SizeOf(typeof(gpc_vertex_list));
+        int vSize = Marshal.SizeOf(typeof(gpc_vertex));
 
-	private static gpc_polygon PolygonTo_gpc_polygon(Polygon polygon)
-	{
-		gpc_polygon result = new gpc_polygon
-		{
-			num_contours = polygon.NofContours
-		};
-		int[] array = new int[polygon.NofContours];
-		for (int i = 0; i < polygon.NofContours; i++)
-		{
-			array[i] = (polygon.ContourIsHole[i] ? 1 : 0);
-		}
-		result.hole = Marshal.AllocCoTaskMem(polygon.NofContours * Marshal.SizeOf(array[0]));
-		if (polygon.NofContours > 0)
-		{
-			Marshal.Copy(array, 0, result.hole, polygon.NofContours);
-			result.contour = Marshal.AllocCoTaskMem(polygon.NofContours * Marshal.SizeOf(default(gpc_vertex_list)));
-		}
-		IntPtr intPtr = result.contour;
-		for (int j = 0; j < polygon.NofContours; j++)
-		{
-			gpc_vertex_list gpc_vertex_list2 = new gpc_vertex_list
-			{
-				num_vertices = polygon.Contour[j].NofVertices,
-				vertex = Marshal.AllocCoTaskMem(polygon.Contour[j].NofVertices * Marshal.SizeOf(default(gpc_vertex)))
-			};
-			IntPtr intPtr2 = gpc_vertex_list2.vertex;
-			for (int k = 0; k < polygon.Contour[j].NofVertices; k++)
-			{
-				gpc_vertex gpc_vertex2 = new gpc_vertex
-				{
-					x = polygon.Contour[j].Vertex[k].x,
-					y = polygon.Contour[j].Vertex[k].y
-				};
-				Marshal.StructureToPtr(gpc_vertex2, intPtr2, false);
-				intPtr2 = (IntPtr)((int)intPtr2 + Marshal.SizeOf(gpc_vertex2));
-			}
-			Marshal.StructureToPtr(gpc_vertex_list2, intPtr, false);
-			intPtr = (IntPtr)((int)intPtr + Marshal.SizeOf(gpc_vertex_list2));
-		}
-		return result;
-	}
+        result.contour = Marshal.AllocCoTaskMem(contourCount * vlSize);
+        IntPtr contourPtr = result.contour;
 
-	private static Polygon gpc_polygon_ToPolygon(gpc_polygon gpc_polygon)
-	{
-		Polygon polygon = new Polygon();
-		polygon.NofContours = gpc_polygon.num_contours;
-		polygon.ContourIsHole = new bool[polygon.NofContours];
-		polygon.Contour = new VertexList[polygon.NofContours];
-		int[] array = new int[polygon.NofContours];
-		IntPtr hole = gpc_polygon.hole;
-		if (polygon.NofContours > 0)
-		{
-			Marshal.Copy(gpc_polygon.hole, array, 0, polygon.NofContours);
-		}
-		for (int i = 0; i < polygon.NofContours; i++)
-		{
-			polygon.ContourIsHole[i] = array[i] != 0;
-		}
-		hole = gpc_polygon.contour;
-		for (int j = 0; j < polygon.NofContours; j++)
-		{
-			gpc_vertex_list gpc_vertex_list2 = (gpc_vertex_list)Marshal.PtrToStructure(hole, typeof(gpc_vertex_list));
-			polygon.Contour[j] = new VertexList();
-			polygon.Contour[j].NofVertices = gpc_vertex_list2.num_vertices;
-			polygon.Contour[j].Vertex = new Vector2[polygon.Contour[j].NofVertices];
-			IntPtr intPtr = gpc_vertex_list2.vertex;
-			for (int k = 0; k < polygon.Contour[j].NofVertices; k++)
-			{
-				gpc_vertex gpc_vertex2 = (gpc_vertex)Marshal.PtrToStructure(intPtr, typeof(gpc_vertex));
-				polygon.Contour[j].Vertex[k].x = (float)gpc_vertex2.x;
-				polygon.Contour[j].Vertex[k].y = (float)gpc_vertex2.y;
-				intPtr = (IntPtr)((int)intPtr + Marshal.SizeOf(gpc_vertex2));
-			}
-			hole = (IntPtr)((int)hole + Marshal.SizeOf(gpc_vertex_list2));
-		}
-		return polygon;
-	}
+        for (int j = 0; j < contourCount; j++)
+        {
+            int vertexCount = polygon.Contour[j].NofVertices;
+            gpc_vertex_list vl = new gpc_vertex_list
+            {
+                num_vertices = vertexCount,
+                vertex = Marshal.AllocCoTaskMem(vertexCount * vSize)
+            };
 
-	private static Tristrip gpc_strip_ToTristrip(gpc_tristrip gpc_strip)
-	{
-		Tristrip tristrip = new Tristrip();
-		tristrip.NofStrips = gpc_strip.num_strips;
-		tristrip.Strip = new VertexList[tristrip.NofStrips];
-		IntPtr intPtr = gpc_strip.strip;
-		for (int i = 0; i < tristrip.NofStrips; i++)
-		{
-			tristrip.Strip[i] = new VertexList();
-			gpc_vertex_list gpc_vertex_list2 = (gpc_vertex_list)Marshal.PtrToStructure(intPtr, typeof(gpc_vertex_list));
-			tristrip.Strip[i].NofVertices = gpc_vertex_list2.num_vertices;
-			tristrip.Strip[i].Vertex = new Vector2[tristrip.Strip[i].NofVertices];
-			IntPtr intPtr2 = gpc_vertex_list2.vertex;
-			for (int j = 0; j < tristrip.Strip[i].NofVertices; j++)
-			{
-				gpc_vertex gpc_vertex2 = (gpc_vertex)Marshal.PtrToStructure(intPtr2, typeof(gpc_vertex));
-				tristrip.Strip[i].Vertex[j].x = (float)gpc_vertex2.x;
-				tristrip.Strip[i].Vertex[j].y = (float)gpc_vertex2.y;
-				intPtr2 = (IntPtr)((int)intPtr2 + Marshal.SizeOf(gpc_vertex2));
-			}
-			intPtr = (IntPtr)((int)intPtr + Marshal.SizeOf(gpc_vertex_list2));
-		}
-		return tristrip;
-	}
+            IntPtr vertexPtr = vl.vertex;
+            for (int k = 0; k < vertexCount; k++)
+            {
+                gpc_vertex v = new gpc_vertex
+                {
+                    x = polygon.Contour[j].Vertex[k].x,
+                    y = polygon.Contour[j].Vertex[k].y
+                };
+                Marshal.StructureToPtr(v, vertexPtr, false);
+                vertexPtr = new IntPtr(vertexPtr.ToInt64() + vSize);
+            }
 
-	private static void Free_gpc_polygon(gpc_polygon gpc_pol)
-	{
-		Marshal.FreeCoTaskMem(gpc_pol.hole);
-		IntPtr intPtr = gpc_pol.contour;
-		for (int i = 0; i < gpc_pol.num_contours; i++)
-		{
-			gpc_vertex_list gpc_vertex_list2 = (gpc_vertex_list)Marshal.PtrToStructure(intPtr, typeof(gpc_vertex_list));
-			Marshal.FreeCoTaskMem(gpc_vertex_list2.vertex);
-			intPtr = (IntPtr)((int)intPtr + Marshal.SizeOf(gpc_vertex_list2));
-		}
-		Marshal.FreeCoTaskMem(gpc_pol.contour);
-	}
+            Marshal.StructureToPtr(vl, contourPtr, false);
+            contourPtr = new IntPtr(contourPtr.ToInt64() + vlSize);
+        }
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_polygon_to_tristrip([In] ref gpc_polygon polygon, [In][Out] ref gpc_tristrip tristrip);
+        return result;
+    }
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_polygon_clip([In] GpcOperation set_operation, [In] ref gpc_polygon subject_polygon, [In] ref gpc_polygon clip_polygon, [In][Out] ref gpc_polygon result_polygon);
+    private static Polygon gpc_polygon_ToPolygon(gpc_polygon gpc_polygon)
+    {
+        Polygon polygon = new Polygon();
+        int contourCount = gpc_polygon.num_contours;
+        polygon.NofContours = contourCount;
+        polygon.ContourIsHole = new bool[contourCount];
+        polygon.Contour = new VertexList[contourCount];
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_tristrip_clip([In] GpcOperation set_operation, [In] ref gpc_polygon subject_polygon, [In] ref gpc_polygon clip_polygon, [In][Out] ref gpc_tristrip result_tristrip);
+        if (contourCount == 0)
+        {
+            return polygon;
+        }
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_free_tristrip([In] ref gpc_tristrip tristrip);
+        int vlSize = Marshal.SizeOf(typeof(gpc_vertex_list));
+        int vSize = Marshal.SizeOf(typeof(gpc_vertex));
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_free_polygon([In] ref gpc_polygon polygon);
+        int[] array = new int[contourCount];
+        Marshal.Copy(gpc_polygon.hole, array, 0, contourCount);
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_read_polygon([In] IntPtr fp, [In] int read_hole_flags, [In][Out] ref gpc_polygon polygon);
+        for (int i = 0; i < contourCount; i++)
+        {
+            polygon.ContourIsHole[i] = array[i] != 0;
+        }
 
-	[DllImport("__Internal", CallingConvention = CallingConvention.Cdecl)]
-	private static extern void gpc_write_polygon([In] IntPtr fp, [In] int write_hole_flags, [In] ref gpc_polygon polygon);
+        IntPtr contourPtr = gpc_polygon.contour;
+        for (int j = 0; j < contourCount; j++)
+        {
+            gpc_vertex_list vl = (gpc_vertex_list)Marshal.PtrToStructure(contourPtr, typeof(gpc_vertex_list));
+            polygon.Contour[j] = new VertexList();
+            polygon.Contour[j].NofVertices = vl.num_vertices;
+            polygon.Contour[j].Vertex = new Vector2[vl.num_vertices];
+
+            IntPtr vertexPtr = vl.vertex;
+            for (int k = 0; k < vl.num_vertices; k++)
+            {
+                gpc_vertex v = (gpc_vertex)Marshal.PtrToStructure(vertexPtr, typeof(gpc_vertex));
+                polygon.Contour[j].Vertex[k].x = (float)v.x;
+                polygon.Contour[j].Vertex[k].y = (float)v.y;
+                vertexPtr = new IntPtr(vertexPtr.ToInt64() + vSize);
+            }
+
+            contourPtr = new IntPtr(contourPtr.ToInt64() + vlSize);
+        }
+
+        return polygon;
+    }
+
+    private static Tristrip gpc_strip_ToTristrip(gpc_tristrip gpc_strip)
+    {
+        Tristrip tristrip = new Tristrip();
+        int stripCount = gpc_strip.num_strips;
+        tristrip.NofStrips = stripCount;
+        tristrip.Strip = new VertexList[stripCount];
+
+        if (stripCount == 0)
+        {
+            return tristrip;
+        }
+
+        int vlSize = Marshal.SizeOf(typeof(gpc_vertex_list));
+        int vSize = Marshal.SizeOf(typeof(gpc_vertex));
+
+        IntPtr stripPtr = gpc_strip.strip;
+        for (int i = 0; i < stripCount; i++)
+        {
+            tristrip.Strip[i] = new VertexList();
+            gpc_vertex_list vl = (gpc_vertex_list)Marshal.PtrToStructure(stripPtr, typeof(gpc_vertex_list));
+            tristrip.Strip[i].NofVertices = vl.num_vertices;
+            tristrip.Strip[i].Vertex = new Vector2[vl.num_vertices];
+
+            IntPtr vertexPtr = vl.vertex;
+            for (int j = 0; j < vl.num_vertices; j++)
+            {
+                gpc_vertex v = (gpc_vertex)Marshal.PtrToStructure(vertexPtr, typeof(gpc_vertex));
+                tristrip.Strip[i].Vertex[j].x = (float)v.x;
+                tristrip.Strip[i].Vertex[j].y = (float)v.y;
+                vertexPtr = new IntPtr(vertexPtr.ToInt64() + vSize);
+            }
+
+            stripPtr = new IntPtr(stripPtr.ToInt64() + vlSize);
+        }
+
+        return tristrip;
+    }
+
+    private static void Free_gpc_polygon(gpc_polygon gpc_pol)
+    {
+        if (gpc_pol.hole != IntPtr.Zero)
+        {
+            Marshal.FreeCoTaskMem(gpc_pol.hole);
+        }
+
+        if (gpc_pol.contour != IntPtr.Zero)
+        {
+            int vlSize = Marshal.SizeOf(typeof(gpc_vertex_list));
+            IntPtr contourPtr = gpc_pol.contour;
+
+            for (int i = 0; i < gpc_pol.num_contours; i++)
+            {
+                gpc_vertex_list vl = (gpc_vertex_list)Marshal.PtrToStructure(contourPtr, typeof(gpc_vertex_list));
+                if (vl.vertex != IntPtr.Zero)
+                {
+                    Marshal.FreeCoTaskMem(vl.vertex);
+                }
+                contourPtr = new IntPtr(contourPtr.ToInt64() + vlSize);
+            }
+
+            Marshal.FreeCoTaskMem(gpc_pol.contour);
+        }
+    }
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_polygon_to_tristrip(ref gpc_polygon polygon, ref gpc_tristrip tristrip);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_polygon_clip(GpcOperation set_operation, ref gpc_polygon subject_polygon, ref gpc_polygon clip_polygon, ref gpc_polygon result_polygon);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_tristrip_clip(GpcOperation set_operation, ref gpc_polygon subject_polygon, ref gpc_polygon clip_polygon, ref gpc_tristrip result_tristrip);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_free_tristrip(ref gpc_tristrip tristrip);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_free_polygon(ref gpc_polygon polygon);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_read_polygon(IntPtr fp, int read_hole_flags, ref gpc_polygon polygon);
+
+    [DllImport(lookFrom, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void gpc_write_polygon(IntPtr fp, int write_hole_flags, ref gpc_polygon polygon);
 }

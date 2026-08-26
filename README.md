@@ -10,7 +10,7 @@ This game was decompiled from an old testflight build of the game (0.6.2 to be e
 
 - This game originally used Unity 3.5.6f4 but has been updated to Unity 4.7.2f1 (doesn't make much of a difference anyway)
 
-- Currently, you can only build for Windows x86 since that is the only platform the native physics engine used by this game has been compiled.
+- Currently, you can only build for Windows (x86 and x86_64) since that is the only platform the native physics engine used by this game has been compiled.
 
 - There are still some enhancements to make for PC such as adding keybinds to some control schemes
 
