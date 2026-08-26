@@ -47,7 +47,7 @@ public static class FCollectibleA
 		{
 			transform.localScale = new Vector3(num, y, num);
 		}
-		prefabC.p_gameObject.animation["Take 001"].time = UnityEngine.Random.Range(0f, 1f);
+		prefabC.p_gameObject.GetComponent<Animation>()["Take 001"].time = UnityEngine.Random.Range(0f, 1f);
 		if (_eic.container != null && _eic.container.identifier == "Block")
 		{
 			GEBlockC gEBlockC = _eic.container.gameComponents[0] as GEBlockC;

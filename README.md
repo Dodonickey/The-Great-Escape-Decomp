@@ -1,4 +1,7 @@
 # TheGreatEscapeDecomp
 
-- This is a TODO, Project here is still Unity 4.7.2f1
+- This is a updated branch of the existing decomp for Unity 2018. Nothing to really say.
 
+# Notice
+
+- Currently you can only build for Windows (Both x86 and x86_64) because of native plugins.

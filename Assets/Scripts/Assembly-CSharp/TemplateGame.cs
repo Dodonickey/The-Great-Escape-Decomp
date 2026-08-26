@@ -50,7 +50,7 @@ public class TemplateGame : IGame
 		m_projectCode = _projectCode;
 		m_projectVersion = _projectVersion;
 		GameObject gameObject = new GameObject("UI Camera");
-		Camera camera = gameObject.AddComponent("Camera") as Camera;
+		Camera camera = gameObject.AddComponent<Camera>() as Camera;
 		camera.orthographic = true;
 		camera.orthographicSize = (float)Screen.height * 0.5f;
 		camera.depth = 1f;

@@ -1669,7 +1669,7 @@ public static class GES
 				float num2 = position.x - gEShapeC.TC.transform.position.x;
 				float num3 = position.y - gEShapeC.TC.transform.position.y;
 				float num4 = position.z - gEShapeC.TC.transform.position.z;
-				float num5 = Main.camera.fov * ((float)Math.PI / 180f);
+				float num5 = Main.camera.fieldOfView * ((float)Math.PI / 180f);
 				float num6 = (0f - num4) * Mathf.Tan(num5 * 0.5f) * 2f;
 				float num7 = (float)Screen.height / num6;
 				material2.mainTextureOffset = new Vector2((0f - num2) * gEShapeC.groundSettings.parallaxAmount.x, (0f - num3) * gEShapeC.groundSettings.parallaxAmount.y) / num6 + Vector2.one * 0.5f;

@@ -188,7 +188,7 @@ public static class CameraS
 		}
 		Vector3 position = m_mainCamera.transform.position;
 		Vector3 position2 = position;
-		float num5 = m_mainCamera.fov * ((float)Math.PI / 180f);
+		float num5 = m_mainCamera.fieldOfView * ((float)Math.PI / 180f);
 		float num6 = (float)Screen.width / (float)Screen.height;
 		float num7 = (0f - Mathf.Tan(num5 * 0.5f)) * position.z;
 		float num8 = num7 * num6;

@@ -198,7 +198,7 @@ public static class GERopeA
 					chipmunkC3 = chipmunkC5;
 				}
 				prefabC = PrefabS.AddComponent(list4[0].TC, Vector3.zero);
-				lineRenderer = prefabC.p_gameObject.AddComponent("LineRenderer") as LineRenderer;
+				lineRenderer = prefabC.p_gameObject.AddComponent<LineRenderer>() as LineRenderer;
 				lineRenderer.SetWidth(3f, 3f);
 				lineRenderer.SetVertexCount(2);
 				lineRenderer.SetPosition(0, vector);
@@ -570,7 +570,7 @@ public static class GERopeA
 				chipmunkC = chipmunkC3;
 			}
 			prefabC = PrefabS.AddComponent(list4[0].TC, Vector3.zero);
-			lineRenderer = prefabC.p_gameObject.AddComponent("LineRenderer") as LineRenderer;
+			lineRenderer = prefabC.p_gameObject.AddComponent<LineRenderer>() as LineRenderer;
 			lineRenderer.SetWidth(3f, 3f);
 			lineRenderer.SetVertexCount(2);
 			lineRenderer.SetPosition(0, vector);

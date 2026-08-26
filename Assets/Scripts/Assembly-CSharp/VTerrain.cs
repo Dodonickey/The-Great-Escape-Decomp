@@ -514,7 +514,7 @@ public class VTerrain : MonoBehaviour
 	{
 		GameObject gameObject = new GameObject("VCube");
 		gameObject.transform.parent = base.transform;
-		gameObject.AddComponent<MeshRenderer>().materials = base.renderer.materials;
+		gameObject.AddComponent<MeshRenderer>().materials = base.GetComponent<Renderer>().materials;
 		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshCollider>();
 		return gameObject;

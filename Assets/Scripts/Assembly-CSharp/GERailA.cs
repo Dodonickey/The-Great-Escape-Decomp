@@ -14,7 +14,7 @@ public static class GERailA
 		Entity entity = EntityManager.AddEntity(tags);
 		TransformC transformC = TransformS.AddComponent(entity);
 		PrefabC prefabC = PrefabS.AddComponent(transformC, Vector3.zero);
-		LineRenderer lineRenderer = prefabC.p_gameObject.AddComponent("LineRenderer") as LineRenderer;
+		LineRenderer lineRenderer = prefabC.p_gameObject.AddComponent<LineRenderer>() as LineRenderer;
 		lineRenderer.SetWidth(10f, 10f);
 		lineRenderer.material = GEState.constraintSheet.m_material;
 		lineRenderer.material.shader = Shader.Find("GameEditor/VertexColorUnlit/Transparent");

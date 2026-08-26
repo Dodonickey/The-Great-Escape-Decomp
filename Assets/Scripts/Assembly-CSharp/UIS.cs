@@ -854,7 +854,7 @@ public static class UIS
 	{
 		_c.separateRenderSpace = true;
 		GameObject gameObject = new GameObject("Canvas Camera(" + _c.identifier + ")");
-		Camera camera = gameObject.AddComponent("Camera") as Camera;
+		Camera camera = gameObject.AddComponent<Camera>() as Camera;
 		camera.orthographic = true;
 		camera.orthographicSize = (_c.canvasHeight - _c.footerHeight - _c.headerHeight) * 0.5f;
 		camera.depth = 1f;

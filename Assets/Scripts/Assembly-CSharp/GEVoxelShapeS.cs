@@ -42,10 +42,10 @@ public static class GEVoxelShapeS
 			gEVoxelShapeC.map = _data.map;
 		}
 		gEVoxelShapeC.GO = new GameObject("VoxelTerrainGameObject");
-		gEVoxelShapeC.GO.AddComponent("MeshRenderer");
-		gEVoxelShapeC.GO.renderer.material = ResourceManager.GetMaterial(_data.groundSettings.fillMaterialResourceIdentifier);
-		gEVoxelShapeC.GO.renderer.material.shader = ResourceManager.GetShader("VoxelShader");
-		gEVoxelShapeC.GO.renderer.material.SetTextureScale("_MainTex", new Vector2(10f, 10f));
+		gEVoxelShapeC.GO.AddComponent<MeshRenderer>();
+		gEVoxelShapeC.GO.GetComponent<Renderer>().material = ResourceManager.GetMaterial(_data.groundSettings.fillMaterialResourceIdentifier);
+		gEVoxelShapeC.GO.GetComponent<Renderer>().material.shader = ResourceManager.GetShader("VoxelShader");
+		gEVoxelShapeC.GO.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(10f, 10f));
 		gEVoxelShapeC.cubes = new List<GEVCube>();
 		gEVoxelShapeC.reBuild = new List<GEVCube>();
 		gEVoxelShapeC.reBuildCollider = new List<GEVCube>();
@@ -171,7 +171,7 @@ public static class GEVoxelShapeS
 	{
 		GameObject gameObject = new GameObject("VCube");
 		gameObject.transform.parent = _c.GO.transform;
-		gameObject.AddComponent<MeshRenderer>().materials = _c.GO.renderer.materials;
+		gameObject.AddComponent<MeshRenderer>().materials = _c.GO.GetComponent<Renderer>().materials;
 		gameObject.AddComponent<MeshFilter>();
 		if (_c.enableFreeSculpting)
 		{
@@ -680,7 +680,7 @@ public static class GEVoxelShapeS
 			while (gEVoxelShapeC.reBuild.Count != 0)
 			{
 				gEVoxelShapeC.reBuild[0].ReBuild();
-				gEVoxelShapeC.reBuild[0].m_mesh.Optimize();
+				var o_682_4_639233471845008422 = gEVoxelShapeC.reBuild[0].m_mesh;
 				gEVoxelShapeC.reBuild.RemoveAt(0);
 				if (gEVoxelShapeC.reBuild.Count != 0 || !gEVoxelShapeC.isPhysical || GEState.editorMode)
 				{

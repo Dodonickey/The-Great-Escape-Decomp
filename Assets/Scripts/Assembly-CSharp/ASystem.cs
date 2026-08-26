@@ -354,16 +354,16 @@ public static class ASystem
 			}
 			if (num == 1)
 			{
-				aShipC.prefab.p_gameObject.animation.Stop();
+				aShipC.prefab.p_gameObject.GetComponent<Animation>().Stop();
 				frameWait++;
 				if (frameWait == data.frameSpeed)
 				{
 					frameWait = 0;
 				}
-				aShipC.prefab.p_gameObject.animation.Play("flames");
-				aShipC.prefab.p_gameObject.animation["flames"].speed = 0f;
-				float frameRate = aShipC.prefab.p_gameObject.animation.GetClip("flames").frameRate;
-				aShipC.prefab.p_gameObject.animation["flames"].time = (float)curFrame / frameRate;
+				aShipC.prefab.p_gameObject.GetComponent<Animation>().Play("flames");
+				aShipC.prefab.p_gameObject.GetComponent<Animation>()["flames"].speed = 0f;
+				float frameRate = aShipC.prefab.p_gameObject.GetComponent<Animation>().GetClip("flames").frameRate;
+				aShipC.prefab.p_gameObject.GetComponent<Animation>()["flames"].time = (float)curFrame / frameRate;
 				if (frameWait == 0)
 				{
 					curFrame++;
@@ -375,11 +375,11 @@ public static class ASystem
 			}
 			else
 			{
-				aShipC.prefab.p_gameObject.animation.Stop();
-				aShipC.prefab.p_gameObject.animation.Play("idle");
-				aShipC.prefab.p_gameObject.animation["idle"].speed = 0f;
-				float frameRate2 = aShipC.prefab.p_gameObject.animation.GetClip("idle").frameRate;
-				aShipC.prefab.p_gameObject.animation["idle"].time = 1f;
+				aShipC.prefab.p_gameObject.GetComponent<Animation>().Stop();
+				aShipC.prefab.p_gameObject.GetComponent<Animation>().Play("idle");
+				aShipC.prefab.p_gameObject.GetComponent<Animation>()["idle"].speed = 0f;
+				float frameRate2 = aShipC.prefab.p_gameObject.GetComponent<Animation>().GetClip("idle").frameRate;
+				aShipC.prefab.p_gameObject.GetComponent<Animation>()["idle"].time = 1f;
 			}
 			if (aShipC.CMC != null)
 			{

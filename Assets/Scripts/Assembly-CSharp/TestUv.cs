@@ -35,7 +35,7 @@ public class TestUv : MonoBehaviour
 				array4[i] = new Color(vector.x / num, vector.y / num2, vector.z / num3);
 			}
 			mesh.uv = array2;
-			mesh.uv1 = array;
+			mesh.uv2 = array;
 			mesh.uv2 = array3;
 			mesh.colors = array4;
 		}

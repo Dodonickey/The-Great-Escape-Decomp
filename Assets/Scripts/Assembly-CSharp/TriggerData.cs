@@ -133,8 +133,9 @@ public class TriggerData : BasicLevelData
 	{
 		using (MemoryStream memoryStream = new MemoryStream())
 		{
-			BinaryFormatter binaryFormatter = new BinaryFormatter();
-			binaryFormatter.Serialize(memoryStream, this);
+            //BinaryFormatter binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = GELevelSerializer.CreateFormatter();
+            binaryFormatter.Serialize(memoryStream, this);
 			memoryStream.Position = 0L;
 			return (TriggerData)binaryFormatter.Deserialize(memoryStream);
 		}

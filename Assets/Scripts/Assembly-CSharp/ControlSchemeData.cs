@@ -59,8 +59,9 @@ public class ControlSchemeData : TriggerData
 	{
 		using (MemoryStream memoryStream = new MemoryStream())
 		{
-			BinaryFormatter binaryFormatter = new BinaryFormatter();
-			binaryFormatter.Serialize(memoryStream, this);
+            //BinaryFormatter binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = GELevelSerializer.CreateFormatter();
+            binaryFormatter.Serialize(memoryStream, this);
 			memoryStream.Position = 0L;
 			return (ControlSchemeData)binaryFormatter.Deserialize(memoryStream);
 		}

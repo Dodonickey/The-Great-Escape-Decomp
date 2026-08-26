@@ -1,40 +1,47 @@
 using System.IO;
+using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class GELevelSerializer
 {
-	public void SerializeLevel(string _file, GELevel _levelData)
-	{
-		BinaryFormatter binaryFormatter = new BinaryFormatter();
-		binaryFormatter.Binder = new VersionDeserializationBinder();
-		Stream stream = File.Open(_file, FileMode.Create);
-		binaryFormatter.Serialize(stream, _levelData);
-		stream.Close();
-	}
+    public static BinaryFormatter CreateFormatter()
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;
+        formatter.Binder = new LegacyUnityBinder();
+        return formatter;
+    }
 
-	public GELevel DeSerializeLevel(string _path)
-	{
-		BinaryFormatter binaryFormatter = new BinaryFormatter();
-		binaryFormatter.Binder = new VersionDeserializationBinder();
-		Stream stream = File.Open(_path, FileMode.Open);
-		GELevel result = (GELevel)binaryFormatter.Deserialize(stream);
-		stream.Close();
-		return result;
-	}
+    public object DeSerializeLevel(string path)
+    {
+        using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+        {
+            BinaryFormatter formatter = CreateFormatter();
+            return formatter.Deserialize(fileStream);
+        }
+    }
 
-	public GELevel DeSerializeUnityLevel(string _path)
-	{
-		GELevel gELevel = null;
-		BinaryFormatter binaryFormatter = new BinaryFormatter();
-		binaryFormatter.Binder = new VersionDeserializationBinder();
-		TextAsset textAsset = Resources.Load(_path) as TextAsset;
-		if (textAsset != null)
-		{
-			Stream serializationStream = new MemoryStream(textAsset.bytes);
-			return (GELevel)binaryFormatter.Deserialize(serializationStream);
-		}
-		Resources.UnloadAsset(textAsset);
-		return null;
-	}
+    public object DeSerializeUnityLevel(string path)
+    {
+        TextAsset textAsset = Resources.Load(path, typeof(TextAsset)) as TextAsset;
+        if (textAsset != null)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(textAsset.bytes))
+            {
+                BinaryFormatter formatter = CreateFormatter();
+                return formatter.Deserialize(memoryStream);
+            }
+        }
+        return null;
+    }
+
+    public void SerializeLevel(string path, object level)
+    {
+        using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+        {
+            BinaryFormatter formatter = CreateFormatter();
+            formatter.Serialize(fileStream, level);
+        }
+    }
 }

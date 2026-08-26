@@ -18,9 +18,9 @@ public static class PrefabS
 			m_components.m_array[i].componentType = ComponentType.Prefab;
 		}
 		m_emptyGameObject = new GameObject("PrefabSystem: InstantiateHelper");
-		MeshFilter meshFilter = m_emptyGameObject.AddComponent("MeshFilter") as MeshFilter;
+		MeshFilter meshFilter = m_emptyGameObject.AddComponent<MeshFilter>() as MeshFilter;
 		meshFilter.mesh = new Mesh();
-		m_emptyGameObject.AddComponent("MeshRenderer");
+		m_emptyGameObject.AddComponent<MeshRenderer>();
 	}
 
 	public static PrefabC AddComponent(TransformC _parentTC, Vector3 _offset)
@@ -35,8 +35,8 @@ public static class PrefabS
 		prefabC.entityIndex = _parentTC.entityIndex;
 		prefabC.active = true;
 		prefabC.p_gameObject = Object.Instantiate(m_emptyGameObject) as GameObject;
-		prefabC.p_renderer = prefabC.p_gameObject.renderer;
-		prefabC.p_texture = prefabC.p_gameObject.renderer.material.mainTexture;
+		prefabC.p_renderer = prefabC.p_gameObject.GetComponent<Renderer>();
+		prefabC.p_texture = prefabC.p_gameObject.GetComponent<Renderer>().material.mainTexture;
 		prefabC.p_mesh = (prefabC.p_gameObject.GetComponent("MeshFilter") as MeshFilter).mesh;
 		prefabC.p_gameObject.transform.parent = _parentTC.transform;
 		prefabC.p_gameObject.transform.localPosition = _offset;
@@ -60,7 +60,7 @@ public static class PrefabS
 		prefabC.entityIndex = _parentTC.entityIndex;
 		prefabC.active = true;
 		prefabC.p_gameObject = Object.Instantiate(_gameObject) as GameObject;
-		prefabC.p_renderer = prefabC.p_gameObject.gameObject.renderer;
+		prefabC.p_renderer = prefabC.p_gameObject.gameObject.GetComponent<Renderer>();
 		if (prefabC.p_renderer != null)
 		{
 			prefabC.p_texture = prefabC.p_renderer.material.mainTexture;

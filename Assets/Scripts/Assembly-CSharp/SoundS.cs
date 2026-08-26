@@ -103,7 +103,7 @@ public static class SoundS
 			{
 				_gameObject = m_listener.gameObject;
 			}
-			m_sounds[num].source = _gameObject.AddComponent("AudioSource") as AudioSource;
+			m_sounds[num].source = _gameObject.AddComponent<AudioSource>() as AudioSource;
 			m_sounds[num].source.playOnAwake = false;
 			m_sounds[num].source.clip = _clip;
 			m_sounds[num].source.loop = _loop;
@@ -113,7 +113,7 @@ public static class SoundS
 			m_sounds[num].source.minDistance = m_defaultMinDist;
 			m_sounds[num].source.maxDistance = m_defaultMaxDist;
 			m_sounds[num].source.rolloffMode = m_defaultRollOffMode;
-			m_sounds[num].source.panLevel = m_defaultPanLevel;
+			m_sounds[num].source.spatialBlend = m_defaultPanLevel;
 			m_sounds[num].source.pitch = _pitch;
 			m_sounds[num].source.Play();
 		}

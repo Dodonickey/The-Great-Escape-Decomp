@@ -349,7 +349,7 @@ public static class GELevelGenerator
 				}
 				PrefabC prefabC = PrefabS.AddComponent(gEShapeC2.TC, Vector3.zero);
 				prefabC.p_mesh.CombineMeshes(array2);
-				prefabC.p_mesh.Optimize();
+				var o_351_4_639233471813034468 = prefabC.p_mesh;
 				Material material = ResourceManager.GetMaterial(gEShapeC2.groundSettings.fillMaterialResourceIdentifier);
 				if (material == null)
 				{
@@ -429,7 +429,7 @@ public static class GELevelGenerator
 						}
 						PrefabC prefabC2 = PrefabS.AddComponent(gEShapeC2.TC, Vector3.zero);
 						prefabC2.p_mesh.CombineMeshes(array5);
-						prefabC2.p_mesh.Optimize();
+						var o_431_6_639233471813347226 = prefabC2.p_mesh;
 						Material material2 = ResourceManager.GetMaterial(gEShapeC2.groundSettings.fillMaterialResourceIdentifier);
 						if (material2 == null)
 						{
@@ -470,7 +470,7 @@ public static class GELevelGenerator
 					}
 					PrefabC prefabC3 = PrefabS.AddComponent(gEShapeC2.TC, Vector3.zero);
 					prefabC3.p_mesh.CombineMeshes(array7);
-					prefabC3.p_mesh.Optimize();
+					var o_472_5_639233471813352816 = prefabC3.p_mesh;
 					Material material3 = ResourceManager.GetMaterial(gEShapeC2.groundSettings.fillMaterialResourceIdentifier);
 					if (material3 == null)
 					{

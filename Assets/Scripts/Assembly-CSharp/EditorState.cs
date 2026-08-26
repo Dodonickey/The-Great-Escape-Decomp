@@ -944,7 +944,7 @@ public class EditorState : BasicState
 
 	public static EIC CreateLoadedEditorItem(EIC _container, EIC _loadedItem)
 	{
-		if (_loadedItem.data.id > GES.m_uniqueId)
+        if (_loadedItem.data.id > GES.m_uniqueId)
 		{
 			GES.m_uniqueId = _loadedItem.data.id;
 		}
