@@ -4,13 +4,13 @@ using UnityEngine;
 
 internal static class ChipmunkWrapper
 {
-#if UNITY_IOS || UNITY_IPHONE || UNITY_STANDALONE_OSX
+#if (UNITY_IOS || UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_WEBGL) && !UNITY_EDITOR
     private const string lookFrom = "__Internal";
 #else
-    private const string lookFrom = "chipmunk";
+	private const string lookFrom = "chipmunk";
 #endif
 
-    public static ChipmunkCollisionPair[] beginList = new ChipmunkCollisionPair[100];
+	public static ChipmunkCollisionPair[] beginList = new ChipmunkCollisionPair[100];
 
 	public static ChipmunkCollisionPair[] persistList = new ChipmunkCollisionPair[100];
 
