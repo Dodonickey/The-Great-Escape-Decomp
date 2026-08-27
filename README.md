@@ -1,4 +1,4 @@
-# TheGreatEscapeDecomp
+# The Great Escape Decompiled
 
 A decompilation of a lost, abandoned beta made originally by Traplight Games. It was showcased in this video around the 3:00 mark (the version shown there differs from this decomp)
 
@@ -6,11 +6,13 @@ A decompilation of a lost, abandoned beta made originally by Traplight Games. It
 
 This game was decompiled from an old testflight build of the game (0.6.2 to be exact)
 
+[Click this to download it (32 bit)](https://archive.org/download/traplight-great-escape/Great%20Escape%21_%28com.Traplight.Farm%29_0.6.2.ipa)
+
 # Notice:
 
-- This game originally used Unity 3.5.6f4 but has been updated to Unity 4.7.2f1 (doesn't make much of a difference anyway)
+- This project has been updated to Unity 2018 to cover WebGL support [click here to view it](tree/Unity-2018)
 
-- Currently, you can only build for Windows (x86 and x86_64) since that is the only platform the native physics engine used by this game has been compiled.
+- This game originally used Unity 3.5.6f4 but has been updated to Unity 4.7.2f1 (doesn't make much of a difference anyway)
 
 - There are still some enhancements to make for PC such as adding keybinds to some control schemes
 
