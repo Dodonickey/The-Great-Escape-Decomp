@@ -90,7 +90,9 @@ public class GEGame : IGame
 		EventS.Initialize(200);
 		FTP.Inititalize();
 		UIS.Initialize(500);
-		SpriteS.Initialize();
+        KeyboardInputManager.Initialize();
+        TouchControlVisibilityManager.Initialize();
+        SpriteS.Initialize();
 		CameraS.Initialize(Main.camera);
 		GES.Initialize();
 		GESpritePrefabS.Initialize(500);
@@ -418,7 +420,9 @@ public class GEGame : IGame
 
 	public void Update()
 	{
-		Vector3 vector = -Main.camera.ScreenToWorldPoint(new Vector3((float)Screen.width * 0.5f + 1f, (float)Screen.height * 0.5f, Main.camera.transform.position.z));
+        KeyboardInputManager.Update();
+        TouchControlVisibilityManager.Update();
+        Vector3 vector = -Main.camera.ScreenToWorldPoint(new Vector3((float)Screen.width * 0.5f + 1f, (float)Screen.height * 0.5f, Main.camera.transform.position.z));
 		Main.m_gameCameraDistanceMultipler = 1f / (vector + Main.camera.transform.position).x;
 		m_currentTime = Time.time;
 		Main.m_gameDeltaTime = m_currentTime - m_prevTime;

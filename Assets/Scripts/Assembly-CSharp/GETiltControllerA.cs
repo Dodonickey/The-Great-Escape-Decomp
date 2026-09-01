@@ -31,6 +31,10 @@ public static class GETiltControllerA
 			EntityManager.SetActivityOfEntity(gETriggerC.entityIndex, _data.active, true);
 		}
 		_eic.trigger = gETriggerC;
+		if (!GEState.editorMode)
+		{
+			KeyboardInputManager.RegisterTiltController(gETriggerC);
+		}
 		return gETriggerC;
 	}
 

@@ -25,7 +25,9 @@ public static class GEJoystickControllerA
 		{
 			TouchAreaC touchAreaComponent = TouchAreaS.AddComponent(transformC, "stick", 150f, true, _eic.camera, gETriggerC);
 			TouchAreaS.AddTouchEventListener(touchAreaComponent, HandleTouches);
-		}
+			KeyboardInputManager.RegisterJoystick(gETriggerC);
+            TouchControlVisibilityManager.RegisterControlTransform(transformC);
+        }
 		Vector2[] circle = DebugDraw.GetCircle(10f, 36, Vector2.zero, false);
 		PrefabS.CreatePathPrefabComponentFromVectorArray(transformC2, Vector3.zero, circle, 6f, new Color(1f, 1f, 1f), ResourceManager.GetMaterial("Line6"), Main.uiCamera, Position.Center, true);
 		circle = DebugDraw.GetCircle(100f, 36, Vector2.zero, false);

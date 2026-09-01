@@ -40,7 +40,9 @@ public static class GEDPadControllerA
 		{
 			TouchAreaC touchAreaComponent = TouchAreaS.AddComponent(transformC, "stick", 150f, true, _eic.camera, gETriggerC);
 			TouchAreaS.AddTouchEventListener(touchAreaComponent, HandleTouches);
-		}
+			KeyboardInputManager.RegisterDPad(gETriggerC);
+            TouchControlVisibilityManager.RegisterControlTransform(transformC);
+        }
 		Vector2[] circle = DebugDraw.GetCircle(100f, 36, Vector2.zero, false);
 		PrefabS.CreatePathPrefabComponentFromVectorArray(transformC, Vector3.zero, circle, 6f, new Color(1f, 1f, 1f), ResourceManager.GetMaterial("Line6"), Main.uiCamera, Position.Center, true);
 		Vector2[] circle2 = DebugDraw.GetCircle(10f, 8, Vector2.zero, false);

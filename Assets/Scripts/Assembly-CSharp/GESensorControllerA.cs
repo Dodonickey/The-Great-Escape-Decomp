@@ -27,7 +27,9 @@ public static class GESensorControllerA
 			TouchAreaC touchAreaC = TouchAreaS.AddComponent(transformC, "sensor", 60f, true, _eic.camera, gETriggerC);
 			TouchAreaS.AddTouchEventListener(touchAreaC, HandleTouches);
 			TouchAreaS.SetOrder(touchAreaC, 200);
-		}
+            // Register for keyboard input
+            KeyboardInputManager.RegisterSensorButton(gETriggerC);
+        }
 		Color color = DebugDraw.GetColor(27f, 21f, 17f, 140f);
 		Vector2[] circle = DebugDraw.GetCircle(80f, 50, Vector2.zero);
 		DebugDraw.AddRadialRandom(circle, 5f);

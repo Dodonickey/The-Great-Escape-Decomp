@@ -64,7 +64,8 @@ public static class FRoundButtonA
 			{
 				TouchAreaS.RemoveTouchEventListener(touchAreaC, HandleTouches);
 				TouchAreaS.AddTouchEventListener(touchAreaC, HandleIngameTouches);
-			}
+				KeyboardInputManager.RegisterJumpButton(gETriggerC);
+            }
 		}
 		SpriteS.SetDimensions(spriteC, 90f, 90f);
 		UIData uIData = _eic.data as UIData;
