@@ -310,7 +310,8 @@ internal static class ChipmunkWrapper
 	public static extern int GetBodyCollisions(IntPtr bodyPtr, ChipmunkSimpleInfo[] simpleInfoStructArray);
 
 	[DllImport(lookFrom)]
-	public static extern bool AreBodiesColliding(IntPtr bodyPtr1, IntPtr bodyPtr2);
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool AreBodiesColliding(IntPtr bodyPtr1, IntPtr bodyPtr2);
 
 	[DllImport(lookFrom)]
 	public static extern void SegmentQuery(Vector2 start, Vector2 end, uint group, uint layers, ref ChipmunkSegmentQueryInfo result);
