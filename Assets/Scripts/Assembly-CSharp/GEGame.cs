@@ -19,7 +19,11 @@ public class GEGame : IGame
 
 	private float m_fpsCumulatedDelta;
 
-	public static SceneManager m_sceneManager;
+    private float m_accumulatedTime = 0f;
+
+    private const float FIXED_TIMESTEP = 1f / 60f;
+
+    public static SceneManager m_sceneManager;
 
 	public static int m_updateLoops = 1;
 
@@ -54,7 +58,8 @@ public class GEGame : IGame
 			m_updateLoops = 2;
 		}
 		Application.targetFrameRate = Main.m_targetFPS;
-		Debug.Initialize(DebugLevel.All);
+        m_prevTime = Time.time;
+        Debug.Initialize(DebugLevel.All);
 		GEState.plugins = _plugins;
 		m_projectCode = _projectCode;
 		m_projectVersion = _projectVersion;
@@ -428,29 +433,38 @@ public class GEGame : IGame
 		Main.m_gameDeltaTime = m_currentTime - m_prevTime;
 		m_prevTime = m_currentTime;
 		Main.m_gameTime += Main.m_gameDeltaTime;
-		InputManager.Update();
-		TouchAreaS.Update();
-		for (int i = 0; i < m_updateLoops; i++)
-		{
-			TweenS.Update();
-			CameraS.Update();
-			UIS.Update();
-			TransformS.Update();
-			m_sceneManager.UpdateLogic();
-			GES.Update();
-			GEPlugin[] plugins = GEState.plugins;
-			foreach (GEPlugin gEPlugin in plugins)
-			{
-				gEPlugin.Update();
-			}
-			EventS.Update();
-			GESpritePrefabS.Update();
-			PrefabS.Update();
-			SpriteS.Update();
-			SoundS.Update();
-			EntityManager.Update();
-		}
-		m_fpsCumulatedDelta += Main.m_gameDeltaTime;
+        InputManager.Update();
+        TouchAreaS.Update();
+
+        m_accumulatedTime += Main.m_gameDeltaTime;
+        if (m_accumulatedTime > 0.2f)
+        {
+            m_accumulatedTime = 0.2f; // Prevents freezing/hanging during lag spikes
+        }
+
+        while (m_accumulatedTime >= FIXED_TIMESTEP)
+        {
+            m_accumulatedTime -= FIXED_TIMESTEP;
+
+            TweenS.Update();
+            CameraS.Update();
+            UIS.Update();
+            TransformS.Update();
+            m_sceneManager.UpdateLogic();
+            GES.Update();
+            GEPlugin[] plugins = GEState.plugins;
+            foreach (GEPlugin gEPlugin in plugins)
+            {
+                gEPlugin.Update();
+            }
+            EventS.Update();
+            GESpritePrefabS.Update();
+            PrefabS.Update();
+            SpriteS.Update();
+            SoundS.Update();
+            EntityManager.Update();
+        }
+        m_fpsCumulatedDelta += Main.m_gameDeltaTime;
 		m_fpsUpdateInterval++;
 		if (m_fpsUpdateInterval == 30)
 		{
